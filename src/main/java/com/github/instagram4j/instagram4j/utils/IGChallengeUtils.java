@@ -4,10 +4,7 @@ import java.util.concurrent.Callable;
 import java.util.concurrent.CompletableFuture;
 import com.github.instagram4j.instagram4j.IGClient;
 import com.github.instagram4j.instagram4j.exceptions.IGResponseException.IGFailedResponse;
-import com.github.instagram4j.instagram4j.requests.challenge.ChallengeResetRequest;
-import com.github.instagram4j.instagram4j.requests.challenge.ChallengeSelectVerifyMethodRequest;
-import com.github.instagram4j.instagram4j.requests.challenge.ChallengeSendCodeRequest;
-import com.github.instagram4j.instagram4j.requests.challenge.ChallengeStateGetRequest;
+import com.github.instagram4j.instagram4j.requests.challenge.*;
 import com.github.instagram4j.instagram4j.responses.accounts.LoginResponse;
 import com.github.instagram4j.instagram4j.responses.challenge.Challenge;
 import com.github.instagram4j.instagram4j.responses.challenge.ChallengeStateResponse;
@@ -54,6 +51,10 @@ public class IGChallengeUtils {
     public static CompletableFuture<ChallengeStateResponse> resetChallenge(IGClient client,
             Challenge challenge) {
         return new ChallengeResetRequest(challenge.getApi_path()).execute(client);
+    }
+
+    public static CompletableFuture<ChallengeStateResponse> sendPhoneNumber(IGClient client, Challenge challenge, String phoneNumber) {
+        return new ChallengeSendPhonenumberRequest(challenge.getApi_path(), phoneNumber).execute(client);
     }
 
     public static LoginResponse resolveChallenge(@NonNull IGClient client,

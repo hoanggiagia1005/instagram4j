@@ -20,6 +20,7 @@ import com.github.instagram4j.instagram4j.responses.feed.FeedTimelineResponse;
 import com.github.instagram4j.instagram4j.responses.media.MediaResponse.MediaConfigureSidecarResponse;
 import com.github.instagram4j.instagram4j.responses.media.MediaResponse.MediaConfigureTimelineResponse;
 import com.github.instagram4j.instagram4j.responses.media.RuploadPhotoResponse;
+import com.github.instagram4j.instagram4j.utils.IGUtils;
 import lombok.Data;
 import lombok.NonNull;
 import lombok.RequiredArgsConstructor;
@@ -163,6 +164,10 @@ public class TimelineAction {
         public CompletableFuture<? extends IGResponse> upload(IGClient client) {
             return client.actions().upload().videoWithCover(data, cover_data,
                     UploadParameters.forTimelineVideo(metadata.upload_id(), true));
+        }
+
+        public static SidecarVideo from(File video) {
+            return from(video, IGUtils.generateCoverImage(video));
         }
 
         public static SidecarVideo from(File video, File cover) {

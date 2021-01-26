@@ -1,6 +1,11 @@
 package com.github.instagram4j.instagram4j.utils;
 
+import java.awt.image.BufferedImage;
+import java.awt.image.ColorModel;
+import java.awt.image.WritableRaster;
 import java.io.ByteArrayOutputStream;
+import java.io.File;
+import java.io.IOException;
 import java.net.CookieManager;
 import java.net.URLEncoder;
 import java.nio.ByteBuffer;
@@ -19,6 +24,8 @@ import java.util.UUID;
 import javax.crypto.Cipher;
 import javax.crypto.spec.GCMParameterSpec;
 import javax.crypto.spec.SecretKeySpec;
+import javax.imageio.ImageIO;
+
 import com.fasterxml.jackson.annotation.JsonInclude.Include;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.core.type.TypeReference;
@@ -27,12 +34,17 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.ObjectWriter;
 import com.github.instagram4j.instagram4j.IGConstants;
 import lombok.SneakyThrows;
+import lombok.extern.slf4j.Slf4j;
 import okhttp3.Cookie;
 import okhttp3.CookieJar;
 import okhttp3.HttpUrl;
 import okhttp3.JavaNetCookieJar;
 import okhttp3.OkHttpClient;
+import org.bytedeco.javacv.FFmpegFrameGrabber;
+import org.bytedeco.javacv.FrameGrabber;
+import org.bytedeco.javacv.Java2DFrameConverter;
 
+@Slf4j
 public class IGUtils {
     private static final String BASE64URL_CHARMAP =
             "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789-_";
@@ -243,6 +255,32 @@ public class IGUtils {
 
     public static String truncate(String s) {
         return s != null ? s.substring(0, Math.min(100, s.length())) : s;
+    }
+
+    public static File generateCoverImage(File videoFile) {
+        File thumbnailFile = null;
+        try {
+            FFmpegFrameGrabber fg = new FFmpegFrameGrabber(videoFile);
+            fg.start();
+
+            Java2DFrameConverter converter = new Java2DFrameConverter();
+            BufferedImage bufferedImage = deepCopy(converter.convert(fg.grabImage()));
+            thumbnailFile = File.createTempFile("insta-" + System.currentTimeMillis(), ".jpg");
+            log.info("Generated thumbnail: " + thumbnailFile.getAbsolutePath());
+            ImageIO.write(bufferedImage, "JPG", thumbnailFile);
+        } catch (FrameGrabber.Exception e) {
+            log.error("An exception has occured during video preprocessing: " + e.getMessage());
+        } catch (IOException e) {
+            log.error("An exception has occured during thumbnail creation: " + e.getMessage());
+        }
+        return thumbnailFile;
+    }
+
+    public static BufferedImage deepCopy(BufferedImage bi) {
+        ColorModel cm = bi.getColorModel();
+        boolean isAlphaPremultiplied = cm.isAlphaPremultiplied();
+        WritableRaster raster = bi.copyData(null);
+        return new BufferedImage(cm, raster, isAlphaPremultiplied, null);
     }
 
 }
