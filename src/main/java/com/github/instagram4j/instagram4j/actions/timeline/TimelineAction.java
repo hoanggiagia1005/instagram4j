@@ -75,6 +75,10 @@ public class TimelineAction {
                 .thenCompose(response -> MediaAction.configureMediaToTimeline(client, upload_id, payload));
     }
 
+    public CompletableFuture<MediaConfigureTimelineResponse> uploadVideo(File video, String caption) {
+        return uploadVideo(video, IGUtils.generateCoverImage(video), new MediaConfigurePayload().caption(caption));
+    }
+
     public CompletableFuture<MediaConfigureTimelineResponse> uploadVideo(File video, File cover,
             String caption) {
         return uploadVideo(video, cover, new MediaConfigurePayload().caption(caption));
