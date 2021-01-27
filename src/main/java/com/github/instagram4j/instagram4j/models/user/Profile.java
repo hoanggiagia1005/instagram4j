@@ -21,4 +21,5 @@ public class Profile extends IGBaseModel implements Serializable {
     @JsonProperty("is_verified")
     private boolean is_verified;
     private boolean has_anonymous_profile_picture;
+    private String public_email;
 }
