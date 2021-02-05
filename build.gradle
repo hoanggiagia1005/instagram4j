@@ -31,7 +31,7 @@ dependencies {
     api 'com.fasterxml.jackson.core:jackson-annotations:2.11.0'
     api 'org.slf4j:slf4j-api:1.7.30'
     // org.bytedeco.javacv
-    api 'org.bytedeco:javacv:1.5.4'
+    api 'org.bytedeco:javacv-platform:1.4.4'
     // Test utilities
     testImplementation 'org.slf4j:slf4j-log4j12:1.7.30'
     testImplementation 'com.squareup.okhttp3:logging-interceptor:4.7.2'
