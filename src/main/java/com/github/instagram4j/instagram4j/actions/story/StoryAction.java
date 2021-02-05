@@ -16,6 +16,7 @@ import com.github.instagram4j.instagram4j.requests.media.MediaConfigureToStoryRe
 import com.github.instagram4j.instagram4j.responses.feed.FeedReelsTrayResponse;
 import com.github.instagram4j.instagram4j.responses.feed.FeedUserStoryResponse;
 import com.github.instagram4j.instagram4j.responses.media.MediaResponse.MediaConfigureToStoryResponse;
+import com.github.instagram4j.instagram4j.utils.IGUtils;
 import lombok.NonNull;
 import lombok.RequiredArgsConstructor;
 
@@ -67,6 +68,10 @@ public class StoryAction {
     
     public CompletableFuture<MediaConfigureToStoryResponse> uploadVideo(File videoFile, File coverFile) {
         return uploadVideo(videoFile, coverFile, Collections.emptyList());
+    }
+
+    public CompletableFuture<MediaConfigureToStoryResponse> uploadVideo(File videoFile) {
+        return uploadVideo(videoFile, IGUtils.generateCoverImage(videoFile), Collections.emptyList());
     }
 
     public CompletableFuture<FeedReelsTrayResponse> tray() {
